@@ -45,6 +45,8 @@ public class ProductGCSLoader implements CommandLineRunner {
 
 	private final GcsService gcsService = GcsServiceFactory.createGcsService(new RetryParams.Builder()
 			.initialRetryDelayMillis(10).retryMaxAttempts(10).totalRetryPeriodMillis(15000).build());
+	// private final RawGcsService gcsService =
+	// LocalRawGcsServiceFactory.createLocalRawGcsService();
 
 	private static final int BUFFER_SIZE = 2 * 1024 * 1024;
 
@@ -65,11 +67,14 @@ public class ProductGCSLoader implements CommandLineRunner {
 	}
 
 	public Stats load() throws Exception {
+		log.info("myauto: LOAD DATA");
 		GcsFilename fileName = getFileName(gcsUri);
 
 		try {
 			GcsInputChannel readChannel = gcsService.openPrefetchingReadChannel(fileName, 0, BUFFER_SIZE);
+			log.info("myauto: LOAD DATA, readChannel = " + readChannel);
 			Reader in = new InputStreamReader(Channels.newInputStream(readChannel), "UTF-8");
+			log.info("myauto: LOAD DATA, in = " + in);
 			JsonReader reader = new JsonReader(in);
 			Gson gson = new GsonBuilder().create();
 			// Read file in stream mode
