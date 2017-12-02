@@ -11,6 +11,8 @@ public class SpringRedisConfig {
 	private String redisHost;
 	@Value("${autocomplete.store.redis.port}")
 	private int redisPort;
+	@Value("${autocomplete.store.redis.password}")
+	private String redisPassword;
 
 	public String getRedisHost() {
 		return redisHost;
@@ -33,6 +35,7 @@ public class SpringRedisConfig {
 		JedisConnectionFactory connectionFactory = new JedisConnectionFactory();
 		connectionFactory.setHostName(redisHost);
 		connectionFactory.setPort(redisPort);
+		connectionFactory.setPassword(redisPassword);
 		return connectionFactory;
 	}
 
